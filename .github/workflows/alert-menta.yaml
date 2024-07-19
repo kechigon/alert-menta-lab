@@ -7,8 +7,8 @@ on:
 
 jobs:
   Alert-Menta:
-    if: startsWith(github.event.comment.body, '/describe') ||　startsWith(github.event.comment.body, '/improve') # https://docs.github.com/ja/webhooks/webhook-events-and-payloads#issues
-    runs-on: ubuntu-22.04 # https://docs.github.com/ja/actions/using-jobs/choosing-the-runner-for-a-job
+    if: startsWith(github.event.comment.body, '/describe') || startsWith(github.event.comment.body, '/suggest') || startsWith(github.event.comment.body, '/ask')
+    runs-on: ubuntu-22.04
     permissions:
       issues: write
       contents: read
@@ -20,20 +20,25 @@ jobs:
         run: |
           curl -sLJO -H 'Accept: application/octet-stream' \
           "https://${{ secrets.ALERT_MENTA_TOKEN }}@api.github.com/repos/3-shake/alert-menta/releases/assets/$( \
-          curl -sL "https://${{ secrets.ALERT_MENTA_TOKEN }}@api.github.com/repos/3-shake/alert-menta/releases/tags/v0.0.2" \
+          curl -sL "https://${{ secrets.ALERT_MENTA_TOKEN }}@api.github.com/repos/3-shake/alert-menta/releases/tags/v0.0.3" \
           | jq '.assets[] | select(.name | contains("Linux_x86")) | .id')"
           tar -zxvf alert-menta_Linux_x86_64.tar.gz
-      
-      - name: Set Command describe
-        id: describe
-        if: startsWith(github.event.comment.body, '/describe')
+
+      - name: Set Command
+        id: set_command
         run: |
-          echo "COMMAND=describe" >> $GITHUB_ENV
-      - name: Set Command improve
-        id: improve
-        if: steps.describe.conclusion == 'skipped' || startsWith(github.event.comment.body, '/improve')
-        run: |
-          echo "COMMAND=improve" >> $GITHUB_ENV
+          COMMENT_BODY="${{ github.event.comment.body }}"
+          if [[ "$COMMENT_BODY" == /ask* ]]; then
+            COMMAND="ask"
+            INTENT="${COMMENT_BODY:5}" # /askの後の文字列を取得
+            echo "INTENT=$INTENT" >> $GITHUB_ENV
+          elif [[ "$COMMENT_BODY" == /describe* ]]; then
+            COMMAND="describe"
+          elif [[ "$COMMENT_BODY" == /suggest* ]]; then
+            COMMAND="suggest"
+          fi
+          echo "COMMAND=$COMMAND" >> $GITHUB_ENV
+
       - run: echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
 
       - name: Get user defined config file
@@ -48,4 +53,8 @@ jobs:
 
       - name: Add Comment
         run: |
-          ./alert-menta -owner ${{ github.repository_owner }} -issue ${{ github.event.issue.number }} -repo ${{ env.REPOSITORY_NAME }} -github-token ${{ secrets.ALERT_MENTA_TOKEN }} -api-key ${{ secrets.OPENAI_KEY }} -command $COMMAND -config $CONFIG_FILE
+          if [[ "$COMMAND" == "ask" ]]; then
+            ./alert-menta -owner ${{ github.repository_owner }} -issue ${{ github.event.issue.number }} -repo ${{ env.REPOSITORY_NAME }} -github-token ${{ secrets.ALERT_MENTA_TOKEN }} -api-key ${{ secrets.OPENAI_KEY }} -command $COMMAND -config $CONFIG_FILE -intent $INTENT
+          else
+            ./alert-menta -owner ${{ github.repository_owner }} -issue ${{ github.event.issue.number }} -repo ${{ env.REPOSITORY_NAME }} -github-token ${{ secrets.ALERT_MENTA_TOKEN }} -api-key ${{ secrets.OPENAI_KEY }} -command $COMMAND -config $CONFIG_FILE
+          fi
