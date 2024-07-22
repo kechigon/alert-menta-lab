@@ -46,7 +46,7 @@ jobs:
         if: hashFiles('.alert-menta.user.yaml') != ''
         run: |
           echo "CONFIG_FILE=.alert-menta.user.yaml" >> $GITHUB_ENV
-          cp .alert-menta.user.yaml alert-menta_Linux_x86_64
+          cp .alert-menta.user.yaml $PWD
 
       - name: Add Comment
         run: |
