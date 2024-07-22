@@ -45,7 +45,7 @@ jobs:
         id: user_config
         if: hashFiles('.alert-menta.user.yaml') != ''
         run: |
-          curl -o .alert.menta.user.yaml -sf "https://raw.githubusercontent.com/${{ github.repository_owner }}/${{ env.REPOSITORY_NAME }}/main/.alert-menta.user.yaml" && echo "CONFIG_FILE=.alert-menta.user.yaml" >> $GITHUB_ENV
+          curl -H "Authorization: token ${{ secrets.ALERT_MENTA_TOKEN }}" -L -o .alert.menta.user.yaml "https://raw.githubusercontent.com/${{ github.repository_owner }}/${{ env.REPOSITORY_NAME }}/main/.alert-menta.user.yaml" && echo "CONFIG_FILE=.alert-menta.user.yaml" >> $GITHUB_ENV
 
       - name: Add Comment
         run: |
