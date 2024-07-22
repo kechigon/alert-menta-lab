@@ -1,4 +1,4 @@
-name: "Alert-Menta: Reacts to specific labels"
+name: "Alert-Menta: Reacts to specific commands"
 run-name: LLM responds to issues against the repository.🚀
 
 on:
