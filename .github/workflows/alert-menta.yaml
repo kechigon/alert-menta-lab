@@ -46,10 +46,7 @@ jobs:
         if: hashFiles('.alert-menta.user.yaml') != ''
         run: |
           echo "CONFIG_FILE=.alert-menta.user.yaml" >> $GITHUB_ENV
-      - name: Get default config file
-        if: steps.user_config.conclusion == 'skipped'
-        run: |
-          echo "CONFIG_FILE=./internal/config/config.yaml" >> $GITHUB_ENV
+          cp .alert-menta.user.yaml alert-menta_Linux_x86_64
 
       - name: Add Comment
         run: |
