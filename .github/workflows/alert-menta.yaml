@@ -44,9 +44,7 @@ jobs:
       - name: Get user defined config file
         id: user_config
         if: hashFiles('.alert-menta.user.yaml') != ''
-        run: |
-          echo "CONFIG_FILE=.alert-menta.user.yaml" >> $GITHUB_ENV
-          cp .alert-menta.user.yaml $PWD
+          curl -o .alert.menta.user.yaml -sf "https://raw.githubusercontent.com/${{ github.repository_owner }}/${{ env.REPOSITORY_NAME }}/main/.alert-menta.user.yaml" && echo "CONFIG_FILE=.alert-menta.user.yaml" >> $GITHUB_ENV
 
       - name: Add Comment
         run: |
