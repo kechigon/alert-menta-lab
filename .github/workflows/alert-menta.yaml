@@ -47,6 +47,8 @@ jobs:
           fi
           echo "COMMAND=$COMMAND" >> $GITHUB_ENV
 
+      - run: echo $INTENT
+
       - run: echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
 
       - name: Get user defined config file
