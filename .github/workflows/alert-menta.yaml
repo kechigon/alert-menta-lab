@@ -12,9 +12,17 @@ jobs:
     permissions:
       issues: write
       contents: read
+      id-token: write
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: 'projects/332699076521/locations/global/workloadIdentityPools/alert-menta/providers/alert-menta-provider'
+          service_account: 'alert-menta@gen-ai-lab-391309.iam.gserviceaccount.com'
 
       - name: Download and Install alert-menta
         run: |
