@@ -17,3 +17,15 @@ variable "zone" {
 variable "my_ip" {
   description = "My global ip"
 }
+
+variable "github_api_token" {
+  description = "github api token"
+}
+
+variable "github_repo" {
+  default = "alert-menta-lab"
+}
+
+variable "github_owner" {
+  default = "kechigon"
+}

@@ -30,6 +30,10 @@ resource "google_compute_instance" "easybuggy" {
     access_config {}
   }
 
+  metadata = {
+    "enable-osconfig" = "true"
+  }
+   
   metadata_startup_script = <<EOF
 #!/bin/bash
 sudo apt-get update
