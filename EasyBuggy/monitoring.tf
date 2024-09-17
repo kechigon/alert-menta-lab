@@ -16,6 +16,16 @@ resource "google_monitoring_notification_channel" "pubsub_channel" {
   }
 }
 
+resource "google_pubsub_topic_iam_binding" "alerts_topic_publisher" {
+  topic = google_pubsub_topic.alerts_topic.name
+
+  role    = "roles/pubsub.publisher"
+  members = [
+    "serviceAccount:service-332699076521@gcp-sa-monitoring-notification.iam.gserviceaccount.com"
+  ]
+}
+
+
 resource "google_storage_bucket" "easybuggy_monitoring_function_bucket" {
   name          = "easybubby_monitoring-functions-bucket"
   location      = "ASIA-NORTHEAST1"
@@ -45,26 +55,46 @@ resource "google_cloudfunctions_function" "issue_creator_function" {
   }
 
   event_trigger {
-    event_type = "google.pubsub.topic.publish"
+    event_type = "providers/cloud.pubsub/eventTypes/topic.publish"
     resource   = google_pubsub_topic.alerts_topic.id
   }
 }
 
-#resource "google_monitoring_alert_policy" "cpu_usage_policy" {
-#  display_name = "High CPU Utilization Alert"
-#  combiner     = "OR"
+resource "google_monitoring_alert_policy" "cpu_usage_policy" {
+  display_name = "High CPU Utilization Alert"
+  combiner     = "OR"
 
-#  conditions {
-#    display_name  = "CPU usage over 80%"
-#    condition_threshold {
-#      filter          = "metric.type=\"compute.googleapis.com/instance/cpu/utilization\" AND resource.type=\"gce_instance\""
-#      duration        = "60s"
-#      comparison      = "COMPARISON_GT"
-#      threshold_value = 0.8  
-#    }
-#  }
+  conditions {
+    display_name  = "CPU usage over 80%"
+    condition_threshold {
+      filter          = "metric.type=\"compute.googleapis.com/instance/cpu/utilization\" AND resource.type=\"gce_instance\""
+      duration        = "60s"
+      comparison      = "COMPARISON_GT"
+      threshold_value = 0.8  
+    }
+  }
 
-#  enabled = true
+  enabled = true
 
-#  notification_channels = [google_monitoring_notification_channel.pubsub_channel.id]
-#}
+  notification_channels = [google_monitoring_notification_channel.pubsub_channel.id]
+}
+
+output "notification_channels_policy" {
+  value = google_monitoring_notification_channel.pubsub_channel.id
+}
+
+output "notification_channels" {
+  value = google_monitoring_notification_channel.pubsub_channel.id
+}
+
+output "notification_channels_label" {
+  value = google_monitoring_notification_channel.pubsub_channel.labels
+}
+
+output "google_pubsub_topic" {
+  value = google_pubsub_topic.alerts_topic.id
+}
+
+output "function_pubsub_topic" {
+  value = google_cloudfunctions_function.issue_creator_function.event_trigger[0].resource
+}

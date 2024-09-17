@@ -51,6 +51,8 @@ def main(d, context): #Need to receive arguments
 
     pubsub_data = envelope.get('data', {})
 
+    logger.info(f"pub_sub_data")
+
     if not pubsub_data:
         logger.error(f"No outside data received: ")
         return "Bad Request", 400
