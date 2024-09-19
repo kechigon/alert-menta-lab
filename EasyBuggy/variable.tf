@@ -1,5 +1,5 @@
 variable "project" {
-  default = "gen-ai-lab-391309"
+  description = "Google Cloud project"
 }
 
 variable "credential_file" {
@@ -28,4 +28,8 @@ variable "github_repo" {
 
 variable "github_owner" {
   default = "kechigon"
+}
+
+variable "project_id" {
+  description = "Google Cloud project ID"
 }

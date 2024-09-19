@@ -21,7 +21,7 @@ resource "google_pubsub_topic_iam_binding" "alerts_topic_publisher" {
 
   role    = "roles/pubsub.publisher"
   members = [
-    "serviceAccount:service-332699076521@gcp-sa-monitoring-notification.iam.gserviceaccount.com"
+    "serviceAccount:service-${var.project_id}@gcp-sa-monitoring-notification.iam.gserviceaccount.com"
   ]
 }
 
