@@ -1,4 +1,4 @@
-[alert-menta](alert-menta sample repository) sample repository
+[alert-menta](https://github.com/3-shake/alert-menta) sample repository
 
   `.github/workflows/alert-menta.yaml`:
   Example configuration for running alert-menta with GitHub Actions
