@@ -64,7 +64,8 @@ resource "google_compute_firewall" "allow-home-ip" {
     ports    = ["8080"]
   }
 
-  source_ranges = [var.my_ip]
+  # source_ranges = [var.my_ip]
+  source_ranges = ["0.0.0.0/0"]
 }
 
 resource "google_compute_firewall" "allow-ssh" {
