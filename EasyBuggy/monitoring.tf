@@ -78,23 +78,3 @@ resource "google_monitoring_alert_policy" "cpu_usage_policy" {
 
   notification_channels = [google_monitoring_notification_channel.pubsub_channel.id]
 }
-
-output "notification_channels_policy" {
-  value = google_monitoring_notification_channel.pubsub_channel.id
-}
-
-output "notification_channels" {
-  value = google_monitoring_notification_channel.pubsub_channel.id
-}
-
-output "notification_channels_label" {
-  value = google_monitoring_notification_channel.pubsub_channel.labels
-}
-
-output "google_pubsub_topic" {
-  value = google_pubsub_topic.alerts_topic.id
-}
-
-output "function_pubsub_topic" {
-  value = google_cloudfunctions_function.issue_creator_function.event_trigger[0].resource
-}
