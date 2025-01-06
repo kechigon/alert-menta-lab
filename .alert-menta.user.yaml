@@ -3,7 +3,7 @@ system:
     log_level: debug
 
 ai:
-  provider: "openai" # "openai" or "vertexai"
+  provider: "vertexai" # "openai" or "vertexai"
 
   openai:
     model: "gpt-4o-mini-2024-07-18" # Check the list of available models by `curl https://api.openai.com/v1/models -H "Authorization: Bearer $OPENAI_API_KEY"`
